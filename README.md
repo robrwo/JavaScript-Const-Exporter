@@ -4,7 +4,7 @@ JavaScript::Const::Exporter - Convert exported Perl constants to JavaScript
 
 # VERSION
 
-version v0.1.0
+version v0.1.1
 
 # SYNOPSIS
 
