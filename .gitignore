@@ -1,0 +1,9 @@
+JavaScript-Const-Exporter-*/
+JavaScript-Const-Exporter-*.tar.gz
+.build/
+cpanfile.snapshot
+Makefile
+*.bak
+blib/
+pm_to_blib
+MYMETA.*
