@@ -4,6 +4,9 @@ use Test::Most;
 
 use JavaScript::Const::Exporter;
 
+eval "use Const::Fast::Exporter";
+plan skip_all => "Const::Fast::Exporter required for this test" if $@;
+
 use lib 't/lib';
 
 my $exporter = JavaScript::Const::Exporter->new(

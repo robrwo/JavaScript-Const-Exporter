@@ -4,6 +4,9 @@ Revision history for {{ $dist->name }}
   [Tests]
   - Added recommended prereqs.
 
+  - Fixed test that was supposed to skip when Const::Fast::Exporter
+    was not installed.
+
   [Other]
   - Fixed incorrect keywords in distribution metadata.
 
