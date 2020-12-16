@@ -118,6 +118,10 @@ When using with [Const::Fast::Exporter](https://metacpan.org/pod/Const::Fast::Ex
 explicitly list all of the constants to be exported, as that doesn't
 provide an `@EXPORT_OK` variable that can be queried.
 
+# SEE ALSO
+
+[Const::Exporter](https://metacpan.org/pod/Const::Exporter)
+
 # SOURCE
 
 The development version is on github at [https://github.com/robrwo/JavaScript-Const-Exporter](https://github.com/robrwo/JavaScript-Const-Exporter)

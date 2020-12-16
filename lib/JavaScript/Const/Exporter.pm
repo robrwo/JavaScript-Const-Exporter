@@ -25,6 +25,8 @@ use Types::Standard qw/ ArrayRef Bool HashRef InstanceOf /;
 
 use namespace::autoclean;
 
+our $VERSION = 'v0.1.0';
+
 =head1 SYNOPSIS
 
 Support a project has a module that defines constants for export:
@@ -299,6 +301,10 @@ sub _import_to_symbol {
 When using with L<Const::Fast::Exporter>-based modules, you must
 explicitly list all of the constants to be exported, as that doesn't
 provide an C<@EXPORT_OK> variable that can be queried.
+
+=head1 SEE ALSO
+
+L<Const::Exporter>
 
 =cut
 
