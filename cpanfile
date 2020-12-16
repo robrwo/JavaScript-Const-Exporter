@@ -37,6 +37,9 @@ on 'test' => sub {
 
 on 'test' => sub {
   recommends "CPAN::Meta" => "2.120900";
+  recommends "Const::Exporter" => "0";
+  recommends "Const::Fast::Exporter" => "0";
+  recommends "HTTP::Status" => "0";
 };
 
 on 'configure' => sub {

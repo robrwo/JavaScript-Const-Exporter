@@ -1,6 +1,9 @@
 Revision history for {{ $dist->name }}
 
 {{$NEXT}}
+  [Tests]
+  - Added recommended prereqs.
+
   [Other]
   - Fixed incorrect keywords in distribution metadata.
 
