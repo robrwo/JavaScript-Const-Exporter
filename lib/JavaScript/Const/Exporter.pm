@@ -1,0 +1,305 @@
+package JavaScript::Const::Exporter;
+
+# ABSTRACT: Convert exported Perl constants to JavaScript
+
+use v5.10;
+
+use Moo;
+use MooX::Options
+    protect_argv => 0,
+    usage_string => '%c %o [output-filename]';
+
+use Carp;
+use JSON::MaybeXS ();
+use Module::Load qw/ load /;
+use Package::Stash;
+use Ref::Util qw/ is_scalarref /;
+use Try::Tiny;
+use Types::Common::String qw/ NonEmptySimpleStr /;
+use Types::Standard qw/ ArrayRef Bool HashRef InstanceOf /;
+
+# RECOMMEND PREREQ: Cpanel::JSON::XS
+# RECOMMEND PREREQ: Package::Stash::XS
+# RECOMMEND PREREQ: Ref::Util::XS
+# RECOMMEND PREREQ: Type::Tiny::XS
+
+use namespace::autoclean;
+
+=head1 SYNOPSIS
+
+Support a project has a module that defines constants for export:
+
+  package MyApp::Const;
+
+  use Exporter qw/ import /;
+
+  our @EXPORT_OK = qw/ A B /;
+
+  use constant A => 123;
+  use constant B => "Hello";
+
+Then you can export these constants to JavaScript for use with a
+web-application's front-end:
+
+  use JavaScript::Const::Exporter;
+
+  my $exporter = JavaScript::Const::Exporter->new(
+      module    => 'MyApp::Const',
+      constants => [qw/ A B /],
+  );
+
+  my $js = $exporter->process
+
+This will return a string with the JavaScript code:
+
+  const A = 123;
+  const B = "Hello";
+
+=head1 DESCRIPTION
+
+This module allows you to extract a list of exported constants from a
+Perl module and generate JavaScript that can be included in a web
+application, thus allowing you to share constants between Perl and
+JavaScript.
+
+=attr use_var
+
+When true, these will be defined as "var" variables instead of "const"
+values.
+
+=cut
+
+option use_var => (
+    is        => 'ro',
+    isa       => Bool,
+    default   => 0,
+    negatable => 0,
+    short     => 'u',
+    doc       => 'use var instead of const',
+);
+
+=attr module
+
+This is the (required) name of the Perl module to include.
+
+=cut
+
+option module => (
+    is       => 'ro',
+    isa      => NonEmptySimpleStr,
+    required => 1,
+    format   => 's',
+    short    => 'm',
+    doc      => 'module name to extract constants from',
+);
+
+=attr constants
+
+This is an array reference of symbols or export tags in the
+L</module>'s namespace to export.
+
+If it is omitted (not recommened), then it will look at the modules
+C<@EXPORT_OK> list an export all modules.
+
+You must include sigils of constants. However, the exported JavaScript
+will omit them, e.g. C<$NAME> will export JavaScript that specifies a
+constant called C<NAME>.
+
+=attr has_constants
+
+True if there are L</constants>.
+
+=cut
+
+option constants => (
+    is         => 'ro',
+    isa        => ArrayRef [NonEmptySimpleStr],
+    predicate  => 1,
+    format     => 's',
+    repeatable => 1,
+    short      => 'c',
+    doc        => 'constants or export tags to extract',
+);
+
+=attr include
+
+This is an array reference of paths to add to your C<@INC>, when the
+L</module> is not in the default path.
+
+=attr has_include
+
+True if there are included paths.
+
+=cut
+
+option include => (
+    is         => 'ro',
+    isa        => ArrayRef [NonEmptySimpleStr],
+    predicate  => 1,
+    short      => 'I',
+    format     => 's',
+    repeatable => 1,
+    doc        => 'paths to include',
+);
+
+=attr pretty
+
+When true, pretty-print any arrays or objects.
+
+=cut
+
+option pretty => (
+    is        => 'ro',
+    isa       => Bool,
+    default   => 0,
+    short     => 'p',
+    doc       => 'enable pretty printed JSON',
+);
+
+=attr stash
+
+This is a L<Package::Stash> for the namespace. This is intended for
+internal use.
+
+=cut
+
+has stash => (
+    is      => 'lazy',
+    isa     => InstanceOf ['Package::Stash'],
+    builder => sub {
+        my ($self) = @_;
+        if ($self->has_include) {
+            push @INC, @{$self->include};
+        }
+        my $namespace = $self->module;
+        load($namespace);
+        return Package::Stash->new($namespace);
+    },
+    handles => [qw/ has_symbol get_symbol /],
+);
+
+=attr tags
+
+This is the content of the module's C<%EXPORT_TAGS>. This is intended
+for internal use.
+
+=cut
+
+has tags => (
+    is      => 'lazy',
+    isa     => HashRef,
+    builder => sub {
+        my ($self) = @_;
+        if ( $self->has_symbol('%EXPORT_TAGS') ) {
+            return $self->get_symbol('%EXPORT_TAGS');
+        }
+        else {
+            my $namespace = $self->module;
+            croak "No \%EXPORT_TAGS were found in ${namespace}";
+        }
+    }
+);
+
+=attr json
+
+This is the JSON encoder. This is intended for internal use.
+
+=cut
+
+has json => (
+    is      => 'lazy',
+    builder => sub {
+        my ($self) = @_;
+        return JSON::MaybeXS->new(
+            utf8         => 1,
+            allow_nonref => 1,
+            pretty       => $self->pretty,
+        );
+    },
+    handles => [qw/ encode /],
+);
+
+=method process
+
+This method attempts to retrieve the symbols from the module and
+generate the JavaScript.
+
+On success, it will return a string containing the JavaScript.
+
+=cut
+
+sub process {
+    my ($self) = @_;
+
+    my @imports;
+
+    if ( $self->has_constants ) {
+        @imports = @{ $self->constants };
+    }
+    elsif ( $self->has_symbol('@EXPORT_OK') ) {
+        @imports = @{ $self->get_symbol('@EXPORT_OK') };
+    }
+    else {
+        croak "No \@EXPORT_OK in " . $self->module;
+    }
+
+    my %symbols = map { $self->_import_to_symbol($_) } @imports;
+
+    my $decl = $self->use_var ? "var" : "const";
+
+    my $buffer = "";
+    for my $name ( sort keys %symbols ) {
+        my $val = $symbols{$name};
+        my $json = $self->encode($val);
+        $json =~ s/\n$// if $self->pretty;
+        $buffer .= "${decl} ${name} = ${json};\n";
+    }
+    return $buffer;
+}
+
+sub _import_to_symbol {
+    my ( $self, $import ) = @_;
+
+    state $reserved = {
+        map { $_ => 1 }
+          qw/
+          abstract arguments await boolean break byte case catch char class
+          const continue debugger default delete do double else enum eval
+          export extends false final finally float for function goto if
+          implements import in instanceof int interface let long native new
+          null package private protected public return short static super
+          switch synchronized this throw throws transient true try typeof
+          var void volatile while with yield
+          /
+    };
+
+    return ( ) if $reserved->{$import};
+
+    if ( my ($name) = $import =~ /^[\$\@\%](\w.*)$/ ) {
+        my $ref = $self->get_symbol($import);
+        my $val = is_scalarref($ref) ? $$ref : $ref;
+        return ( $name => $val );
+    }
+    elsif ( my ($tag) = $import =~ /^[:\-](\w.*)$/ ) {
+        my $imports = $self->tags->{$tag}
+          or croak "No tag '${tag}' found in " . $self->module;
+        return ( map { $self->_import_to_symbol($_) } @{$imports} );
+    }
+    else {
+        my $fn  = $self->get_symbol( '&' . $import )
+            or croak "Cannot find symbol '${import}' in " . $self->module;
+        my $val = $fn->();
+        return ( $import => $val );
+    }
+
+}
+
+=head1 KNOWN ISSUES
+
+When using with L<Const::Fast::Exporter>-based modules, you must
+explicitly list all of the constants to be exported, as that doesn't
+provide an C<@EXPORT_OK> variable that can be queried.
+
+=cut
+
+1;
