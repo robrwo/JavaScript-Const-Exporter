@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}
 
 {{$NEXT}}
+
+v0.1.2    2020-12-17 14:04:58+00:00 Europe/London
   [Enhancements]
   - Emit a warning when coderef constants are not actually constants.
 
