@@ -6,15 +6,12 @@ use Test::Script;
 use Path::Tiny;
 
 my $expected = <<EOF;
-const bar = 2;
-const baz = ["a","b","c"];
-const bo = {"a":1};
-const foo = 1;
-const zoo = 3;
+const A = 100;
+const B = 200;
 EOF
 
 script_runs(
-    [qw( bin/js-const -I t/lib -m Consts1 )],
+    [qw( bin/js-const -I t/lib -m Consts2 )],
     {
         exit   => 0,
         stdout => \my $out
@@ -26,7 +23,7 @@ is $out, $expected, 'expected output (stoud)';
 my $file = Path::Tiny->tempfile;
 
 script_runs(
-    [qw( bin/js-const -I t/lib -m Consts1 ), "$file" ],
+    [qw( bin/js-const -I t/lib -m Consts2 ), "$file" ],
     {
         exit   => 0,
     }
