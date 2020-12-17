@@ -1,6 +1,9 @@
 Revision history for {{ $dist->name }}
 
 {{$NEXT}}
+  [Enhancements]
+  - Emit a warning when coderef constants are not actually constants.
+
   [Tests]
   - Fixed test that used Const::Exporter.
 

@@ -68,6 +68,10 @@ This is an array reference of symbols or export tags in the
 If it is omitted (not recommened), then it will look at the modules
 `@EXPORT_OK` list an export all modules.
 
+Any subroutine can be included, however if the subroutine is not not a
+coderef constant, e.g. created by [constant](https://metacpan.org/pod/constant), then it will emit a
+warning.
+
 You must include sigils of constants. However, the exported JavaScript
 will omit them, e.g. `$NAME` will export JavaScript that specifies a
 constant called `NAME`.

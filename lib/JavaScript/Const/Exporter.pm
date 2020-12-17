@@ -14,6 +14,7 @@ use JSON::MaybeXS ();
 use Module::Load qw/ load /;
 use Package::Stash;
 use Ref::Util qw/ is_scalarref /;
+use Sub::Identify qw/ is_sub_constant /;
 use Try::Tiny;
 use Types::Common::String qw/ NonEmptySimpleStr /;
 use Types::Standard qw/ ArrayRef Bool HashRef InstanceOf /;
@@ -102,6 +103,10 @@ L</module>'s namespace to export.
 
 If it is omitted (not recommened), then it will look at the modules
 C<@EXPORT_OK> list an export all modules.
+
+Any subroutine can be included, however if the subroutine is not not a
+coderef constant, e.g. created by L<constant>, then it will emit a
+warning.
 
 You must include sigils of constants. However, the exported JavaScript
 will omit them, e.g. C<$NAME> will export JavaScript that specifies a
@@ -290,6 +295,7 @@ sub _import_to_symbol {
     else {
         my $fn  = $self->get_symbol( '&' . $import )
             or croak "Cannot find symbol '${import}' in " . $self->module;
+        is_sub_constant($fn) or carp "Symbol '${import}' is not a constant in " . $self->module;
         my $val = $fn->();
         return ( $import => $val );
     }
