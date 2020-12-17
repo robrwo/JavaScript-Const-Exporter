@@ -4,7 +4,7 @@ package JavaScript::Const::Exporter;
 
 use v5.10;
 
-use Moo;
+use Moo 1.002000;
 use MooX::Options
     protect_argv => 0,
     usage_string => '%c %o [output-filename]';
