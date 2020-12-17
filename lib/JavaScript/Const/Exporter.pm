@@ -26,7 +26,7 @@ use Types::Standard qw/ ArrayRef Bool HashRef InstanceOf /;
 
 use namespace::autoclean;
 
-our $VERSION = 'v0.1.4';
+our $VERSION = 'v0.1.5';
 
 =head1 SYNOPSIS
 
