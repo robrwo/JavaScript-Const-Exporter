@@ -13,6 +13,6 @@ my $exporter = JavaScript::Const::Exporter->new(
 
 ok my $js = $exporter->process, 'process';
 
-like $js, qr/^const LOCK_SH = \d+\;/a, 'expected result';
+like $js, qr/^const LOCK_SH = [0-9]+\;/, 'expected result';
 
 done_testing;
