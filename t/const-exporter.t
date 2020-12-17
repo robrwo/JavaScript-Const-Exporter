@@ -1,7 +1,10 @@
 #!perl
 
+use version 0.77;
+
 use Test::Most;
 use Test::Deep::Set;
+use Test::Warnings qw/ warnings /;
 
 use JavaScript::Const::Exporter;
 
@@ -18,17 +21,31 @@ subtest 'Const::Exporter (specific constants)' => sub {
         constants => [qw/ $zoo foo /],
     );
 
-    ok my $js = $exporter->process, 'process';
+    my @warnings = warnings {
 
-    my $expected = <<EOF;
+        ok my $js = $exporter->process, 'process';
+
+        my $expected = <<EOF;
 const foo = 1;
 const zoo = 3;
 EOF
 
-    is $js, $expected, 'expected output';
+        is $js, $expected, 'expected output';
+
+    };
 
     cmp_deeply \@INC, supersetof( @{ $exporter->include } ), "\@INC changed";
 
+  SKIP: {
+        if ( version->parse($Const::Exporter::VERSION) >= version->declare('v1.1.0') ) {
+            is_deeply \@warnings, [], 'no warnings';
+        }
+        else {
+            cmp_deeply \@warnings,
+              [ re(/^Symbol 'foo' is not a constant in Consts1/) ],
+              'expected warning';
+        }
+    }
 };
 
 subtest 'Const::Exporter tag' => sub {
@@ -41,16 +58,20 @@ subtest 'Const::Exporter tag' => sub {
         constants => [':tag_a'],
     );
 
-    ok my $js = $exporter->process, 'process';
+    my @warnings = warnings {
 
-    my $expected = <<EOF;
+        ok my $js = $exporter->process, 'process';
+
+        my $expected = <<EOF;
 const bar = 2;
 const baz = ["a","b","c"];
 const bo = {"a":1};
 const foo = 1;
 EOF
 
-    is $js, $expected, 'expected output';
+        is $js, $expected, 'expected output';
+
+    };
 
 };
 
@@ -59,13 +80,15 @@ subtest 'Const::Exporter (all exports)' => sub {
     local @INC;
 
     my $exporter = JavaScript::Const::Exporter->new(
-        module    => 'Consts1',
-        include   => [qw( t/lib )],
+        module  => 'Consts1',
+        include => [qw( t/lib )],
     );
 
-    ok my $js = $exporter->process, 'process';
+    my @warnings = warnings {
 
-    my $expected = <<EOF;
+        ok my $js = $exporter->process, 'process';
+
+        my $expected = <<EOF;
 const bar = 2;
 const baz = ["a","b","c"];
 const bo = {"a":1};
@@ -73,7 +96,9 @@ const foo = 1;
 const zoo = 3;
 EOF
 
-    is $js, $expected, 'expected output';
+        is $js, $expected, 'expected output';
+
+    };
 
 };
 

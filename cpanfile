@@ -32,8 +32,10 @@ on 'test' => sub {
   requires "Test::More" => "0";
   requires "Test::Most" => "0";
   requires "Test::Script" => "0";
+  requires "Test::Warnings" => "0";
   requires "constant" => "0";
   requires "lib" => "0";
+  requires "version" => "0.77";
 };
 
 on 'test' => sub {
