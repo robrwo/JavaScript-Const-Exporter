@@ -2,8 +2,9 @@
 
 use version 0.77;
 
-use Test::Most;
+use Test::Most 0.35;
 use Test::Deep::Set;
+use Test::Deep::Regexp;
 use Test::Warnings qw/ warnings /;
 
 use JavaScript::Const::Exporter;
