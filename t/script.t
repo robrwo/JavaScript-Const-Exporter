@@ -1,7 +1,7 @@
 #!perl
 
 use Test2::V0;
-use Test::Script;
+use Test::Script 1.23;
 
 use Path::Tiny;
 
