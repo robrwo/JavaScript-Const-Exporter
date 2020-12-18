@@ -118,9 +118,17 @@ On success, it will return a string containing the JavaScript.
 
 # KNOWN ISSUES
 
+## Const::Fast::Exporter
+
 When using with [Const::Fast::Exporter](https://metacpan.org/pod/Const::Fast::Exporter)-based modules, you must
 explicitly list all of the constants to be exported, as that doesn't
 provide an `@EXPORT_OK` variable that can be queried.
+
+## Const::Exporter
+
+Exporting constant subs from [Const::Exporter](https://metacpan.org/pod/Const::Exporter) v1.0.0 or earlier will
+emit warnings about the subs not being constant subs. The issue has
+been fixed in v1.1.0.
 
 # SEE ALSO
 
