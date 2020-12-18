@@ -304,6 +304,8 @@ sub _import_to_symbol {
 
 =head1 KNOWN ISSUES
 
+=head2 Const::Fast::Exporter
+
 When using with L<Const::Fast::Exporter>-based modules, you must
 explicitly list all of the constants to be exported, as that doesn't
 provide an C<@EXPORT_OK> variable that can be queried.
