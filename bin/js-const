@@ -9,11 +9,11 @@
 
   js-const -Ilib -m MyApp::Consts public/js/consts.js
 
-=head1 OPTIONS
+=head1 DESCRIPTION
 
-=head2 C<-c> I<symbol>
+This is a command-line interface for L<JavaScript::Const::Exporter>.
 
-=head2 C<--constants> I<symbol>
+=option C<-c> I<symbol>, C<--constants> I<symbol>
 
 This specifies a constant or export tag to extract.
 
@@ -21,27 +21,19 @@ Can be specified multiple times.
 
 If omitted, it will attempt to use the module's C<@EXPORT_OK>.
 
-=head2 C<-I> I<path>
-
-=head2 C<--include> I<path>
+=option C<-I> I<path>, C<--include> I<path>
 
 Option paths to include in C<@INC>.
 
-=head2 C<-m> I<module>
-
-=head2 C<--mpdile> I<module>
+=option C<-m> I<module>, C<--mpdile> I<module>
 
 The module name to extract constants from.
 
-=head2 C<-p>
-
-=head2 C<--pretty>
+=option C<-p>, C<--pretty>
 
 Enable pretty printed JSON for arrays or objects (hashes).
 
-=head2 C<-u>
-
-=head2 C<--use_var>
+=option C<-u>, C<--use_var>
 
 Use var instead of const.
 

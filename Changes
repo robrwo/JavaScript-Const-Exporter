@@ -6,6 +6,8 @@ Revision history for {{ $dist->name }}
 
   - Add note to KNOWN ISSUES about older Perl versions.
 
+  - Reformatted POD for `js-const` script.
+
   [Other]
   - Added $VERSION to `js-const` script.
 
