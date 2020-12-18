@@ -310,6 +310,12 @@ When using with L<Const::Fast::Exporter>-based modules, you must
 explicitly list all of the constants to be exported, as that doesn't
 provide an C<@EXPORT_OK> variable that can be queried.
 
+=head2 Const::Exporter
+
+Exporting constant subs from L<Const::Exporter> v1.0.0 or earlier will
+emit warnings about the subs not being constant subs. The issue has
+been fixed in v1.1.0.
+
 =head1 SEE ALSO
 
 L<Const::Exporter>

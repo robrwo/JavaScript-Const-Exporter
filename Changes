@@ -1,6 +1,9 @@
 Revision history for {{ $dist->name }}
 
 {{$NEXT}}
+  [Documentation]
+  - Document issue with Const::Exporter v1.0.0 or earlier.
+
   [Other]
   - Added $VERSION to `js-const` script.
 
