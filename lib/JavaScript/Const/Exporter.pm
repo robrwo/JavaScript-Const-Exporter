@@ -304,6 +304,13 @@ sub _import_to_symbol {
 
 =head1 KNOWN ISSUES
 
+=head2 Support for older Perl versions
+
+This module requires Perl v5.10 or newer.
+
+Pull requests to support older versions of Perl are welcome. See
+L</SOURCE>.
+
 =head2 Const::Fast::Exporter
 
 When using with L<Const::Fast::Exporter>-based modules, you must

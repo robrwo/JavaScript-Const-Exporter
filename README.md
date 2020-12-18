@@ -118,6 +118,13 @@ On success, it will return a string containing the JavaScript.
 
 # KNOWN ISSUES
 
+## Support for older Perl versions
+
+This module requires Perl v5.10 or newer.
+
+Pull requests to support older versions of Perl are welcome. See
+["SOURCE"](#source).
+
 ## Const::Fast::Exporter
 
 When using with [Const::Fast::Exporter](https://metacpan.org/pod/Const::Fast::Exporter)-based modules, you must

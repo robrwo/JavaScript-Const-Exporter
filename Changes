@@ -4,6 +4,8 @@ Revision history for {{ $dist->name }}
   [Documentation]
   - Document issue with Const::Exporter v1.0.0 or earlier.
 
+  - Add note to KNOWN ISSUES about older Perl versions.
+
   [Other]
   - Added $VERSION to `js-const` script.
 
