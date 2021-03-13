@@ -8,6 +8,8 @@ Revision history for {{ $dist->name }}
 
   - Reformatted POD for `js-const` script.
 
+  - Bumped copyright year.
+
   [Other]
   - Added $VERSION to `js-const` script.
 
