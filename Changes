@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}
 
 {{$NEXT}}
+  [Tests]
+  - Specify minimum version of Test::Deep, GH #1.
 
 v0.1.5    2021-03-13 11:58:48+00:00 Europe/London
   [Documentation]
