@@ -4,6 +4,9 @@ Revision history for {{ $dist->name }}
   [Bug Fixes]
   - Removed unused prerequisite imports.
 
+  [Documentation]
+  - Bump copyright year.
+
 v0.1.6    2021-03-20 10:11:57+00:00 Europe/London
   [Tests]
   - Specify minimum version of Test::Deep, GH #1.
