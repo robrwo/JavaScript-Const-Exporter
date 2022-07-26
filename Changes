@@ -7,6 +7,8 @@ Revision history for {{ $dist->name }}
   [Documentation]
   - Bump copyright year.
 
+  - Fixed encoding of links in README.
+
 v0.1.6    2021-03-20 10:11:57+00:00 Europe/London
   [Tests]
   - Specify minimum version of Test::Deep, GH #1.
