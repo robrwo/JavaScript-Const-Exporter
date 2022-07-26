@@ -15,7 +15,6 @@ use Module::Load qw/ load /;
 use Package::Stash;
 use Ref::Util qw/ is_scalarref /;
 use Sub::Identify 0.06 qw/ is_sub_constant /;
-use Try::Tiny;
 use Types::Common::String qw/ NonEmptySimpleStr /;
 use Types::Standard qw/ ArrayRef Bool HashRef InstanceOf /;
 

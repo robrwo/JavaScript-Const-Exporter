@@ -1,6 +1,8 @@
 Revision history for {{ $dist->name }}
 
 {{$NEXT}}
+  [Bug Fixes]
+  - Removed unused prerequisite imports.
 
 v0.1.6    2021-03-20 10:11:57+00:00 Europe/London
   [Tests]

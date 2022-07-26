@@ -10,7 +10,6 @@ requires "Package::Stash" => "0";
 requires "Path::Tiny" => "0";
 requires "Ref::Util" => "0";
 requires "Sub::Identify" => "0.06";
-requires "Try::Tiny" => "0";
 requires "Types::Common::String" => "0";
 requires "Types::Standard" => "0";
 requires "namespace::autoclean" => "0";
